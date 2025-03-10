@@ -5,9 +5,9 @@ namespace TestEvaluare
 {
     public class Intrebare
     {
-        public string Text;
-        public List<string> Optiuni;
-        public int RaspunsCorect;
+        public string Text { get; set; }
+        public List<string> Optiuni { get; set; }
+        public int RaspunsCorect { get; set; }
 
         public Intrebare(string text, List<string> optiuni, int raspunsCorect)
         {
@@ -21,7 +21,7 @@ namespace TestEvaluare
             Console.WriteLine(Text);
             for (int i = 0; i < Optiuni.Count; i++)
             {
-                Console.WriteLine((i + 1) + ". " + Optiuni[i]);
+                Console.WriteLine($"{i + 1}. {Optiuni[i]}");
             }
         }
 
@@ -31,5 +31,3 @@ namespace TestEvaluare
         }
     }
 }
-
-

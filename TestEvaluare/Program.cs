@@ -9,22 +9,50 @@ namespace TestEvaluare
         {
             Chestionar chestionar = new Chestionar();
 
-            chestionar.AdaugaIntrebare(new Intrebare(
-                "Care este capitala Franței?",
-                new List<string> { "Berlin", "Madrid", "Paris", "Roma" },
-                3));
+            Console.WriteLine("Cate intrebari vrei sa adaugi?");
+            int nrIntrebari;
+            while (!int.TryParse(Console.ReadLine(), out nrIntrebari) || nrIntrebari <= 0)
+            {
+                Console.Write("Introdu un numar valid: ");
+            }
 
-            chestionar.AdaugaIntrebare(new Intrebare(
-                "Cat face 2 + 2?",
-                new List<string> { "3", "4", "5", "6" },
-                2));
+            for (int i = 0; i < nrIntrebari; i++)
+            {
+                Console.WriteLine($"\nIntrodu detaliile pentru intrebarea {i + 1}:");
+                Console.Write("Textul intrebarii: ");
+                string text = Console.ReadLine();
 
-            Console.WriteLine("Bine ai venit la testul de evaluare!");
-            Console.WriteLine("Apasa ENTER pentru a incepe...");
+                List<string> optiuni = new List<string>();
+                for (int j = 0; j < 4; j++)
+                {
+                    Console.Write($"Varianta {j + 1}: ");
+                    optiuni.Add(Console.ReadLine());
+                }
+
+                Console.Write("Numarul raspunsului corect (1-4): ");
+                int raspunsCorect;
+                while (!int.TryParse(Console.ReadLine(), out raspunsCorect) || raspunsCorect < 1 || raspunsCorect > 4)
+                {
+                    Console.Write("Introdu un numar valid (1-4): ");
+                }
+
+                chestionar.AdaugaIntrebare(new Intrebare(text, optiuni, raspunsCorect));
+            }
+
+            Console.WriteLine("\nApasa ENTER pentru a incepe testul...");
             Console.ReadLine();
 
             chestionar.Porneste();
-            Console.WriteLine("Test terminat!");
+
+            Console.WriteLine("\nTest terminat!");
+
+            
+            chestionar.AfiseazaToateIntrebarile();
+
+            
+            Console.Write("\nIntrodu textul unei intrebari pentru a cauta: ");
+            string cautare = Console.ReadLine();
+            chestionar.CautaIntrebare(cautare);
         }
     }
 }

@@ -1,44 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TestEvaluare
 {
     public class Chestionar
     {
-        private List<Intrebare> intrebari;
-        private int scor;
-
-        public Chestionar()
-        {
-            intrebari = new List<Intrebare>();
-            scor = 0;
-        }
+        public List<Intrebare> Intrebari { get; private set; } = new List<Intrebare>();
+        public int Scor { get; private set; }
 
         public void AdaugaIntrebare(Intrebare intrebare)
         {
-            intrebari.Add(intrebare);
+            Intrebari.Add(intrebare);
         }
 
         public void Porneste()
         {
-            foreach (var intrebare in intrebari)
+            Scor = 0;
+            foreach (var intrebare in Intrebari)
             {
                 intrebare.Afiseaza();
                 Console.Write("Alege raspunsul (1-4): ");
-                int raspunsUtilizator = Convert.ToInt32(Console.ReadLine());
+                int raspunsUtilizator;
+
+                while (!int.TryParse(Console.ReadLine(), out raspunsUtilizator) || raspunsUtilizator < 1 || raspunsUtilizator > 4)
+                {
+                    Console.Write("Raspuns invalid! Introdu un numar intre 1 si 4: ");
+                }
 
                 if (intrebare.VerificaRaspuns(raspunsUtilizator))
                 {
                     Console.WriteLine("Corect!\n");
-                    scor++;
+                    Scor++;
                 }
                 else
                 {
-                    Console.WriteLine("Gresit! Raspunsul corect era " + intrebare.RaspunsCorect + ".\n");
+                    Console.WriteLine($"Gresit! Raspunsul corect era {intrebare.RaspunsCorect}.\n");
                 }
             }
 
-            Console.WriteLine("Scor final: " + scor + "/" + intrebari.Count);
+            Console.WriteLine($"Scor final: {Scor}/{Intrebari.Count}");
+        }
+
+        public void AfiseazaToateIntrebarile()
+        {
+            Console.WriteLine("\nLista intrebarilor:");
+            foreach (var intrebare in Intrebari)
+            {
+                intrebare.Afiseaza();
+                Console.WriteLine();
+            }
+        }
+
+        public void CautaIntrebare(string text)
+        {
+            var rezultate = Intrebari.Where(i => i.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
+
+
+            if (rezultate.Any())
+            {
+                Console.WriteLine("\nIntrebari gasite:");
+                foreach (var intrebare in rezultate)
+                {
+                    intrebare.Afiseaza();
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nNicio intrebare gasita!");
+            }
         }
     }
 }
