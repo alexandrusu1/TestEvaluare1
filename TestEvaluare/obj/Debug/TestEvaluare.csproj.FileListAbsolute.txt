@@ -1,0 +1,7 @@
+C:\Users\alexr\Desktop\TestEvaluare1-master\TestEvaluare\bin\Debug\TestEvaluare.exe.config
+C:\Users\alexr\Desktop\TestEvaluare1-master\TestEvaluare\bin\Debug\TestEvaluare.exe
+C:\Users\alexr\Desktop\TestEvaluare1-master\TestEvaluare\bin\Debug\TestEvaluare.pdb
+C:\Users\alexr\Desktop\TestEvaluare1-master\TestEvaluare\obj\Debug\TestEvaluare.csproj.AssemblyReference.cache
+C:\Users\alexr\Desktop\TestEvaluare1-master\TestEvaluare\obj\Debug\TestEvaluare.csproj.CoreCompileInputs.cache
+C:\Users\alexr\Desktop\TestEvaluare1-master\TestEvaluare\obj\Debug\TestEvaluare.exe
+C:\Users\alexr\Desktop\TestEvaluare1-master\TestEvaluare\obj\Debug\TestEvaluare.pdb
