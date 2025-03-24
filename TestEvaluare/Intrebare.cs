@@ -5,9 +5,9 @@ class Intrebare
 {
     public string Text { get; private set; }
     public List<string> Optiuni { get; private set; }
-    public int RaspunsCorect { get; private set; }
+    public OptiuniRaspuns RaspunsCorect { get; private set; }
 
-    public Intrebare(string text, List<string> optiuni, int raspunsCorect)
+    public Intrebare(string text, List<string> optiuni, OptiuniRaspuns raspunsCorect)
     {
         Text = text;
         Optiuni = optiuni;
@@ -17,14 +17,14 @@ class Intrebare
     public void Afiseaza()
     {
         Console.WriteLine(Text);
-        for (int i = 0; i < Optiuni.Count; i++)
-        {
-            Console.WriteLine((i + 1) + ". " + Optiuni[i]);
-        }
+        Console.WriteLine("A. " + Optiuni[0]);
+        Console.WriteLine("B. " + Optiuni[1]);
+        Console.WriteLine("C. " + Optiuni[2]);
+        Console.WriteLine("D. " + Optiuni[3]);
         Console.Write("\nRăspuns: ");
     }
 
-    public bool VerificaRaspuns(int raspuns)
+    public bool VerificaRaspuns(OptiuniRaspuns raspuns)
     {
         return raspuns == RaspunsCorect;
     }

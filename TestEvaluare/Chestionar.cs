@@ -8,9 +8,12 @@ class Chestionar
     private int Scor;
     private DateTime StartTime;
     private const int TimpLimita = 600; // 10 minute
+    private TipQuiz Tip;
 
-    public Chestionar(string fisier)
+    public Chestionar(TipQuiz tip)
     {
+        Tip = tip;
+        string fisier = $"{tip.ToString().ToLower()}.txt";
         Intrebari = IncarcaIntrebari(fisier);
     }
 
@@ -31,7 +34,7 @@ class Chestionar
 
             Console.WriteLine("Timp rămas: " + timpRamas + " secunde");
             intrebare.Afiseaza();
-            int raspuns = CitesteRaspuns();
+            OptiuniRaspuns raspuns = CitesteRaspuns();
 
             if (intrebare.VerificaRaspuns(raspuns))
             {
@@ -48,19 +51,23 @@ class Chestionar
         SalvareRezultat(Scor);
     }
 
-    private int CitesteRaspuns()
+    private OptiuniRaspuns CitesteRaspuns()
     {
-        int raspuns;
-        while (!int.TryParse(Console.ReadLine(), out raspuns) || raspuns < 1 || raspuns > 4)
+        while (true)
         {
-            Console.Write("Alege un număr între 1 și 4: ");
+            Console.Write("Alege (A, B, C, D): ");
+            string input = Console.ReadLine().ToUpper();
+
+            if (Enum.TryParse(input, out OptiuniRaspuns raspuns))
+                return raspuns;
+
+            Console.WriteLine("Opțiune invalidă. Încearcă din nou.");
         }
-        return raspuns;
     }
 
     private void SalvareRezultat(int scorFinal)
     {
-        string rezultat = DateTime.Now + ", Scor: " + scorFinal + "/" + Intrebari.Count + "\n";
+        string rezultat = $"{DateTime.Now}, Quiz: {Tip}, Scor: {scorFinal}/{Intrebari.Count}\n";
         File.AppendAllText("rezultate.txt", rezultat);
     }
 
@@ -71,13 +78,16 @@ class Chestionar
 
         for (int i = 0; i < linii.Length; i += 6)
         {
-            List<string> optiuni = new List<string>();
-            optiuni.Add(linii[i + 1]);
-            optiuni.Add(linii[i + 2]);
-            optiuni.Add(linii[i + 3]);
-            optiuni.Add(linii[i + 4]);
+            List<string> optiuni = new List<string>
+            {
+                linii[i + 1],
+                linii[i + 2],
+                linii[i + 3],
+                linii[i + 4]
+            };
 
-            intrebari.Add(new Intrebare(linii[i], optiuni, int.Parse(linii[i + 5])));
+            OptiuniRaspuns raspunsCorect = (OptiuniRaspuns)Enum.Parse(typeof(OptiuniRaspuns), linii[i + 5]);
+            intrebari.Add(new Intrebare(linii[i], optiuni, raspunsCorect));
         }
 
         return intrebari;

@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chestionar.cs" />
+    <Compile Include="Enum-uri.cs" />
     <Compile Include="Intrebare.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
