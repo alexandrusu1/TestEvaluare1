@@ -1,58 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace TestEvaluare
+class Program
 {
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        Console.WriteLine(@"
+ ██████╗ ██╗   ██╗██╗███████╗ █████╗ ██████╗ ██████╗ 
+██╔═══██╗██║   ██║██║╚══███╔╝██╔══██╗██╔══██╗██╔══██╗
+██║   ██║██║   ██║██║  ███╔╝ ███████║██████╔╝██████╔╝
+██║▄▄ ██║██║   ██║██║ ███╔╝  ██╔══██║██╔═══╝ ██╔═══╝ 
+╚██████╔╝╚██████╔╝██║███████╗██║  ██║██║     ██║     
+ ╚══▀▀═╝  ╚═════╝ ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝     
+            ");
+        Console.WriteLine("1. Matematică");
+        Console.WriteLine("2. Istorie");
+        Console.WriteLine("3. Geografie");
+        Console.Write("Alege un quiz: ");
+
+        string alegere = Console.ReadLine();
+        string fisier = "";
+
+        if (alegere == "1") fisier = "matematica.txt";
+        else if (alegere == "2") fisier = "istorie.txt";
+        else if (alegere == "3") fisier = "geografie.txt";
+        else
         {
-            Chestionar chestionar = new Chestionar();
-
-            Console.WriteLine("Cate intrebari vrei sa adaugi?");
-            int nrIntrebari;
-            while (!int.TryParse(Console.ReadLine(), out nrIntrebari) || nrIntrebari <= 0)
-            {
-                Console.Write("Introdu un numar valid: ");
-            }
-
-            for (int i = 0; i < nrIntrebari; i++)
-            {
-                Console.WriteLine($"\nIntrodu detaliile pentru intrebarea {i + 1}:");
-                Console.Write("Textul intrebarii: ");
-                string text = Console.ReadLine();
-
-                List<string> optiuni = new List<string>();
-                for (int j = 0; j < 4; j++)
-                {
-                    Console.Write($"Varianta {j + 1}: ");
-                    optiuni.Add(Console.ReadLine());
-                }
-
-                Console.Write("Numarul raspunsului corect (1-4): ");
-                int raspunsCorect;
-                while (!int.TryParse(Console.ReadLine(), out raspunsCorect) || raspunsCorect < 1 || raspunsCorect > 4)
-                {
-                    Console.Write("Introdu un numar valid (1-4): ");
-                }
-
-                chestionar.AdaugaIntrebare(new Intrebare(text, optiuni, raspunsCorect));
-            }
-
-            Console.WriteLine("\nApasa ENTER pentru a incepe testul...");
-            Console.ReadLine();
-
-            chestionar.Porneste();
-
-            Console.WriteLine("\nTest terminat!");
-
-            
-            chestionar.AfiseazaToateIntrebarile();
-
-            
-            Console.Write("\nIntrodu textul unei intrebari pentru a cauta: ");
-            string cautare = Console.ReadLine();
-            chestionar.CautaIntrebare(cautare);
+            Console.WriteLine("Opțiune invalidă.");
+            return;
         }
+
+        Chestionar quiz = new Chestionar(fisier);
+        quiz.Start();
     }
 }

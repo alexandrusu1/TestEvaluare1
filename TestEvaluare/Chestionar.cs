@@ -1,75 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 
-namespace TestEvaluare
+class Chestionar
 {
-    public class Chestionar
+    private List<Intrebare> Intrebari;
+    private int Scor;
+    private DateTime StartTime;
+    private const int TimpLimita = 600; // 10 minute
+
+    public Chestionar(string fisier)
     {
-        public List<Intrebare> Intrebari { get; private set; } = new List<Intrebare>();
-        public int Scor { get; private set; }
+        Intrebari = IncarcaIntrebari(fisier);
+    }
 
-        public void AdaugaIntrebare(Intrebare intrebare)
-        {
-            Intrebari.Add(intrebare);
-        }
+    public void Start()
+    {
+        StartTime = DateTime.Now;
+        Scor = 0;
 
-        public void Porneste()
+        foreach (var intrebare in Intrebari)
         {
-            Scor = 0;
-            foreach (var intrebare in Intrebari)
+            int timpRamas = TimpLimita - (int)(DateTime.Now - StartTime).TotalSeconds;
+            if (timpRamas <= 0)
             {
-                intrebare.Afiseaza();
-                Console.Write("Alege raspunsul (1-4): ");
-                int raspunsUtilizator;
-
-                while (!int.TryParse(Console.ReadLine(), out raspunsUtilizator) || raspunsUtilizator < 1 || raspunsUtilizator > 4)
-                {
-                    Console.Write("Raspuns invalid! Introdu un numar intre 1 si 4: ");
-                }
-
-                if (intrebare.VerificaRaspuns(raspunsUtilizator))
-                {
-                    Console.WriteLine("Corect!\n");
-                    Scor++;
-                }
-                else
-                {
-                    Console.WriteLine($"Gresit! Raspunsul corect era {intrebare.RaspunsCorect}.\n");
-                }
+                Console.WriteLine("Timp expirat! Test picat.");
+                SalvareRezultat(0);
+                return;
             }
 
-            Console.WriteLine($"Scor final: {Scor}/{Intrebari.Count}");
-        }
+            Console.WriteLine("Timp rămas: " + timpRamas + " secunde");
+            intrebare.Afiseaza();
+            int raspuns = CitesteRaspuns();
 
-        public void AfiseazaToateIntrebarile()
-        {
-            Console.WriteLine("\nLista intrebarilor:");
-            foreach (var intrebare in Intrebari)
+            if (intrebare.VerificaRaspuns(raspuns))
             {
-                intrebare.Afiseaza();
-                Console.WriteLine();
-            }
-        }
-
-        public void CautaIntrebare(string text)
-        {
-            var rezultate = Intrebari.Where(i => i.Text.IndexOf(text, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
-
-
-            if (rezultate.Any())
-            {
-                Console.WriteLine("\nIntrebari gasite:");
-                foreach (var intrebare in rezultate)
-                {
-                    intrebare.Afiseaza();
-                    Console.WriteLine();
-                }
+                Console.WriteLine("✔ Corect!\n");
+                Scor++;
             }
             else
             {
-                Console.WriteLine("\nNicio intrebare gasita!");
+                Console.WriteLine("✖ Greșit! Răspuns corect: " + intrebare.RaspunsCorect + "\n");
             }
         }
+
+        Console.WriteLine("Scor final: " + Scor + "/" + Intrebari.Count);
+        SalvareRezultat(Scor);
+    }
+
+    private int CitesteRaspuns()
+    {
+        int raspuns;
+        while (!int.TryParse(Console.ReadLine(), out raspuns) || raspuns < 1 || raspuns > 4)
+        {
+            Console.Write("Alege un număr între 1 și 4: ");
+        }
+        return raspuns;
+    }
+
+    private void SalvareRezultat(int scorFinal)
+    {
+        string rezultat = DateTime.Now + ", Scor: " + scorFinal + "/" + Intrebari.Count + "\n";
+        File.AppendAllText("rezultate.txt", rezultat);
+    }
+
+    private List<Intrebare> IncarcaIntrebari(string fisier)
+    {
+        List<Intrebare> intrebari = new List<Intrebare>();
+        string[] linii = File.ReadAllLines(fisier);
+
+        for (int i = 0; i < linii.Length; i += 6)
+        {
+            List<string> optiuni = new List<string>();
+            optiuni.Add(linii[i + 1]);
+            optiuni.Add(linii[i + 2]);
+            optiuni.Add(linii[i + 3]);
+            optiuni.Add(linii[i + 4]);
+
+            intrebari.Add(new Intrebare(linii[i], optiuni, int.Parse(linii[i + 5])));
+        }
+
+        return intrebari;
     }
 }
